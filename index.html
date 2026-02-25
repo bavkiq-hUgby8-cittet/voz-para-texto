@@ -8,65 +8,94 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #1a1a2e;
-            color: #e0e0e0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 30px 16px;
+            background: #1a1a2e; color: #e0e0e0; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center; padding: 30px 16px;
         }
         h1 { font-size: 24px; margin-bottom: 6px; color: #fff; }
         .subtitle { color: #777; margin-bottom: 20px; font-size: 13px; text-align: center; line-height: 1.4; }
-        .mode-bar { display: flex; gap: 0; margin-bottom: 20px; border-radius: 8px; overflow: hidden; border: 1px solid #3a3a5a; }
-        .mode-btn { padding: 10px 20px; background: #2a2a4a; color: #888; border: none; cursor: pointer; font-size: 14px; transition: all 0.2s; }
-        .mode-btn.active { background: #4a6fa5; color: #fff; font-weight: 600; }
-        .mode-btn:hover:not(.active) { background: #3a3a5a; }
         .mic-container { margin-bottom: 16px; }
-        .mic-btn { width: 90px; height: 90px; border-radius: 50%; border: 3px solid #4a4a6a; background: #2a2a4a; color: #fff; font-size: 36px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; }
+        .mic-btn {
+            width: 100px; height: 100px; border-radius: 50%; border: 3px solid #4a4a6a;
+            background: #2a2a4a; color: #fff; font-size: 40px; cursor: pointer;
+            transition: all 0.3s ease; display: flex; align-items: center; justify-content: center;
+        }
         .mic-btn:hover { background: #3a3a5a; border-color: #6a6a8a; }
         .mic-btn.recording { background: #e74c3c; border-color: #c0392b; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(231,76,60,0.5); } 70% { box-shadow: 0 0 0 18px rgba(231,76,60,0); } 100% { box-shadow: 0 0 0 0 rgba(231,76,60,0); } }
-        .status { font-size: 13px; margin-bottom: 14px; color: #888; min-height: 18px; }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(231,76,60,0.5); }
+            70% { box-shadow: 0 0 0 20px rgba(231,76,60,0); }
+            100% { box-shadow: 0 0 0 0 rgba(231,76,60,0); }
+        }
+        .status { font-size: 14px; margin-bottom: 14px; color: #888; min-height: 20px; text-align: center; }
         .status.active { color: #e74c3c; font-weight: 600; }
+        .status.copied { color: #27ae60; font-weight: 600; font-size: 16px; }
         .text-area-container { width: 100%; max-width: 650px; }
-        .text-area { width: 100%; min-height: 160px; background: #16213e; border: 2px solid #2a2a4a; border-radius: 10px; color: #e0e0e0; font-size: 15px; line-height: 1.5; padding: 16px; resize: vertical; font-family: inherit; outline: none; transition: border-color 0.3s; }
+        .text-area {
+            width: 100%; min-height: 180px; background: #16213e; border: 2px solid #2a2a4a;
+            border-radius: 10px; color: #e0e0e0; font-size: 16px; line-height: 1.5;
+            padding: 16px; resize: vertical; font-family: inherit; outline: none;
+        }
         .text-area:focus { border-color: #4a6fa5; }
         .text-area::placeholder { color: #555; }
         .buttons { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; justify-content: center; }
-        .btn { padding: 12px 22px; border-radius: 8px; border: none; font-size: 15px; cursor: pointer; transition: all 0.2s; font-weight: 500; }
-        .btn-send { background: #27ae60; color: #fff; flex: 1; min-width: 200px; font-size: 16px; }
+        .btn {
+            padding: 12px 22px; border-radius: 8px; border: none; font-size: 15px;
+            cursor: pointer; transition: all 0.2s; font-weight: 500;
+        }
+        .btn-send { background: #27ae60; color: #fff; flex: 1; min-width: 180px; font-size: 16px; }
         .btn-send:hover { background: #2ecc71; }
-        .btn-send.sent { background: #4a6fa5; }
         .btn-clear { background: #3a3a5a; color: #ccc; }
         .btn-clear:hover { background: #4a4a6a; }
-        .settings-row { display: flex; gap: 16px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; justify-content: center; }
+        .settings-row {
+            display: flex; gap: 16px; align-items: center; margin-bottom: 16px;
+            flex-wrap: wrap; justify-content: center;
+        }
         .setting-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #888; }
-        .setting-item input[type="number"] { width: 50px; background: #2a2a4a; border: 1px solid #4a4a6a; border-radius: 4px; color: #e0e0e0; padding: 4px 6px; font-size: 13px; text-align: center; outline: none; }
-        .lang-selector { display: flex; gap: 8px; align-items: center; }
-        .lang-selector label { color: #888; font-size: 13px; }
-        .lang-selector select { background: #2a2a4a; color: #e0e0e0; border: 1px solid #4a4a6a; border-radius: 6px; padding: 5px 10px; font-size: 13px; outline: none; }
-        .error-msg { background: #4a1a1a; border: 1px solid #e74c3c; border-radius: 8px; padding: 14px; margin-bottom: 16px; max-width: 650px; display: none; font-size: 13px; line-height: 1.4; }
-        .auto-send-info { background: #1a3a1a; border: 1px solid #27ae60; border-radius: 8px; padding: 14px; margin-top: 10px; margin-bottom: 10px; max-width: 650px; width: 100%; font-size: 13px; color: #7dcea0; display: none; }
-        .timer-bar { height: 4px; background: #27ae60; border-radius: 2px; margin-top: 10px; transition: width 0.1s linear; width: 100%; }
-        .instructions { margin-top: 20px; background: #16213e; border: 1px solid #2a2a4a; border-radius: 10px; padding: 18px; max-width: 650px; width: 100%; font-size: 13px; line-height: 1.6; color: #999; }
-        .instructions h3 { color: #ccc; font-size: 14px; margin-bottom: 10px; }
-        .instructions ol { padding-left: 20px; }
-        .instructions li { margin-bottom: 6px; }
-        .highlight { color: #4a6fa5; font-weight: 600; }
-        kbd { background: #2a2a4a; border: 1px solid #4a4a6a; border-radius: 4px; padding: 2px 6px; font-family: monospace; font-size: 12px; color: #ccc; }
+        .setting-item select, .setting-item input {
+            background: #2a2a4a; color: #e0e0e0; border: 1px solid #4a4a6a;
+            border-radius: 6px; padding: 5px 10px; font-size: 13px; outline: none;
+        }
+        .setting-item input[type="number"] { width: 50px; text-align: center; }
+        .auto-bar {
+            background: #1a3a1a; border: 1px solid #27ae60; border-radius: 8px;
+            padding: 12px 16px; margin-bottom: 12px; max-width: 650px; width: 100%;
+            font-size: 14px; color: #7dcea0; display: none; text-align: center;
+        }
+        .timer-track { height: 6px; background: #2a2a4a; border-radius: 3px; margin-top: 8px; overflow: hidden; }
+        .timer-fill { height: 100%; background: #27ae60; border-radius: 3px; transition: width 0.1s linear; width: 100%; }
+        .flash { animation: flashGreen 0.6s ease; }
+        @keyframes flashGreen {
+            0% { background: #1a1a2e; } 30% { background: #1a3a1a; } 100% { background: #1a1a2e; }
+        }
+        .error-msg {
+            background: #4a1a1a; border: 1px solid #e74c3c; border-radius: 8px;
+            padding: 14px; margin-bottom: 16px; max-width: 650px; display: none; font-size: 13px;
+        }
+        .tip {
+            margin-top: 20px; color: #666; font-size: 12px; max-width: 650px;
+            text-align: center; line-height: 1.5;
+        }
+        .perm-btn {
+            background: #4a6fa5; color: #fff; border: none; border-radius: 8px;
+            padding: 14px 28px; font-size: 16px; cursor: pointer; margin-bottom: 20px;
+            display: none; font-weight: 600;
+        }
+        .perm-btn:hover { background: #5a7fb5; }
     </style>
 </head>
 <body>
     <h1>🎤 Voz → Claude</h1>
-    <p class="subtitle">Fale, e quando parar o texto é copiado automaticamente.<br>Depois cole no Claude com Cmd+V e Enter.</p>
+    <p class="subtitle">Fale e quando parar, o texto é copiado automaticamente</p>
+
     <div class="error-msg" id="errorMsg"></div>
-    <div class="mode-bar">
-        <button class="mode-btn active" id="modeAuto" onclick="setMode('auto')">⚡ Auto-envio</button>
-        <button class="mode-btn" id="modeManual" onclick="setMode('manual')">✋ Manual</button>
-    </div>
+
+    <!-- Permission button - shown first time -->
+    <button class="perm-btn" id="permBtn" onclick="requestPermission()">
+        🔓 Clique aqui primeiro para permitir cópia automática
+    </button>
+
     <div class="settings-row">
-        <div class="lang-selector">
+        <div class="setting-item">
             <label>Idioma:</label>
             <select id="langSelect">
                 <option value="pt-BR" selected>Português (BR)</option>
@@ -74,101 +103,294 @@
                 <option value="es-ES">Español</option>
             </select>
         </div>
-        <div class="setting-item" id="delaySetting">
-            <label>Pausa pra enviar:</label>
+        <div class="setting-item">
+            <label>Pausa:</label>
             <input type="number" id="autoDelay" value="3" min="1" max="15"> seg
         </div>
     </div>
+
     <div class="mic-container">
         <button class="mic-btn" id="micBtn" onclick="toggleRecording()">🎤</button>
     </div>
+
     <p class="status" id="status">Clique no microfone para começar</p>
-    <div class="auto-send-info" id="autoSendInfo">
-        ⏳ Copiando em <span id="countdown"></span>s... (fale mais para cancelar)
-        <div class="timer-bar" id="timerBar"></div>
+
+    <div class="auto-bar" id="autoBar">
+        ⏳ Copiando em <span id="countdown">3</span>s... fale mais para cancelar
+        <div class="timer-track"><div class="timer-fill" id="timerFill"></div></div>
     </div>
+
     <div class="text-area-container">
-        <textarea class="text-area" id="textArea" placeholder="O texto vai aparecer aqui conforme você fala..."></textarea>
+        <textarea class="text-area" id="textArea" placeholder="O texto vai aparecer aqui..."></textarea>
         <div class="buttons">
-            <button class="btn btn-send" id="sendBtn" onclick="sendToClaude()">📤 Copiar Texto</button>
+            <button class="btn btn-send" id="sendBtn" onclick="copyNow()">📋 Copiar agora</button>
             <button class="btn btn-clear" onclick="clearText()">🗑️ Limpar</button>
         </div>
     </div>
-    <div class="instructions">
-        <h3>📋 Como funciona</h3>
-        <ol>
-            <li>Abra o <span class="highlight">Claude</span> em outra aba e clique no campo de texto</li>
-            <li>Volte aqui e clique no <span class="highlight">microfone</span></li>
-            <li>Fale normalmente</li>
-            <li>Quando parar de falar, o texto é <strong>copiado automaticamente</strong> e toca um bip</li>
-            <li>Vá pro Claude e aperte <kbd>Cmd</kbd>+<kbd>V</kbd> e depois <kbd>Enter</kbd></li>
-        </ol>
-    </div>
-<script>
-let recognition=null,isRecording=false,finalTranscript='',mode='auto',countdownInterval=null;
-const micBtn=document.getElementById('micBtn'),statusEl=document.getElementById('status'),textArea=document.getElementById('textArea'),sendBtn=document.getElementById('sendBtn'),errorMsg=document.getElementById('errorMsg'),langSelect=document.getElementById('langSelect'),autoSendInfo=document.getElementById('autoSendInfo'),countdownEl=document.getElementById('countdown'),timerBar=document.getElementById('timerBar'),autoDelayInput=document.getElementById('autoDelay');
 
-function showError(m){errorMsg.textContent=m;errorMsg.style.display='block';}
-function hideError(){errorMsg.style.display='none';}
-function setMode(m){mode=m;document.getElementById('modeAuto').classList.toggle('active',m==='auto');document.getElementById('modeManual').classList.toggle('active',m==='manual');document.getElementById('delaySetting').style.display=m==='auto'?'flex':'none';cancelAutoSend();}
-function initRecognition(){
-    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-    if(!SR){showError('Seu navegador não suporta. Use o Google Chrome.');micBtn.disabled=true;return null;}
-    const rec=new SR();rec.continuous=true;rec.interimResults=true;rec.lang=langSelect.value;
-    rec.onresult=(event)=>{
-        let interim='';
-        for(let i=event.resultIndex;i<event.results.length;i++){
-            const t=event.results[i][0].transcript;
-            if(event.results[i].isFinal){finalTranscript+=t+' ';if(mode==='auto'&&isRecording)startAutoSendCountdown();}
-            else{interim+=t;cancelAutoSend();}
+    <p class="tip">
+        💡 Quando o texto for copiado, vá pro Claude e aperte <strong>Cmd+V</strong> e <strong>Enter</strong>.<br>
+        O bip avisa que já copiou. A caixa de texto limpa sozinha depois.
+    </p>
+
+    <!-- Hidden textarea for fallback copy -->
+    <textarea id="hiddenCopy" style="position:fixed;top:-9999px;left:-9999px;" aria-hidden="true"></textarea>
+
+<script>
+let recognition = null;
+let isRecording = false;
+let finalTranscript = '';
+let countdownInterval = null;
+let clipboardAllowed = false;
+
+const micBtn = document.getElementById('micBtn');
+const statusEl = document.getElementById('status');
+const textArea = document.getElementById('textArea');
+const sendBtn = document.getElementById('sendBtn');
+const errorMsg = document.getElementById('errorMsg');
+const langSelect = document.getElementById('langSelect');
+const autoBar = document.getElementById('autoBar');
+const countdownEl = document.getElementById('countdown');
+const timerFill = document.getElementById('timerFill');
+const autoDelayInput = document.getElementById('autoDelay');
+const permBtn = document.getElementById('permBtn');
+const hiddenCopy = document.getElementById('hiddenCopy');
+
+// Check clipboard permission on load
+async function checkClipboard() {
+    try {
+        const perm = await navigator.permissions.query({ name: 'clipboard-write' });
+        if (perm.state === 'granted') {
+            clipboardAllowed = true;
+            permBtn.style.display = 'none';
+        } else {
+            permBtn.style.display = 'block';
         }
-        textArea.value=finalTranscript+(interim||'');
-        textArea.scrollTop=textArea.scrollHeight;
+    } catch(e) {
+        // Firefox etc - try direct
+        permBtn.style.display = 'block';
+    }
+}
+checkClipboard();
+
+async function requestPermission() {
+    try {
+        await navigator.clipboard.writeText('teste');
+        clipboardAllowed = true;
+        permBtn.style.display = 'none';
+        statusEl.textContent = '✅ Permissão concedida! Agora clique no microfone.';
+        statusEl.classList.add('copied');
+        setTimeout(() => {
+            statusEl.textContent = 'Clique no microfone para começar';
+            statusEl.classList.remove('copied');
+        }, 2000);
+    } catch(e) {
+        showError('Não conseguiu permissão. Tente clicar de novo ou use o botão "Copiar agora".');
+    }
+}
+
+function showError(m) { errorMsg.textContent = m; errorMsg.style.display = 'block'; }
+function hideError() { errorMsg.style.display = 'none'; }
+
+function initRecognition() {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) {
+        showError('Navegador não suporta. Use o Google Chrome!');
+        micBtn.disabled = true;
+        return null;
+    }
+    const rec = new SR();
+    rec.continuous = true;
+    rec.interimResults = true;
+    rec.lang = langSelect.value;
+
+    rec.onresult = (event) => {
+        let interim = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+            const t = event.results[i][0].transcript;
+            if (event.results[i].isFinal) {
+                finalTranscript += t + ' ';
+                // Start auto-copy countdown when speech finalizes
+                startCountdown();
+            } else {
+                interim += t;
+                // Still speaking - cancel countdown
+                cancelCountdown();
+            }
+        }
+        textArea.value = finalTranscript + (interim || '');
+        textArea.scrollTop = textArea.scrollHeight;
     };
-    rec.onerror=(event)=>{if(event.error==='not-allowed'){showError('Microfone negado. Clique no cadeado na barra do navegador e permita.');stopRecording();}};
-    rec.onend=()=>{if(isRecording)try{rec.start();}catch(e){}};
+
+    rec.onerror = (event) => {
+        if (event.error === 'not-allowed') {
+            showError('Microfone bloqueado. Clique no cadeado na barra do navegador e permita.');
+            stopRecording();
+        }
+    };
+
+    rec.onend = () => {
+        if (isRecording) try { rec.start(); } catch(e) {}
+    };
+
     return rec;
 }
-function toggleRecording(){hideError();isRecording?stopRecording():startRecording();}
-function startRecording(){
-    recognition=initRecognition();if(!recognition)return;
-    recognition.lang=langSelect.value;finalTranscript=textArea.value;
-    try{recognition.start();isRecording=true;micBtn.classList.add('recording');statusEl.textContent='🔴 Gravando... fale agora';statusEl.classList.add('active');}
-    catch(e){showError('Erro ao iniciar. Recarregue a página.');}
+
+function toggleRecording() {
+    hideError();
+    isRecording ? stopRecording() : startRecording();
 }
-function stopRecording(){
-    if(recognition){recognition.stop();recognition=null;}
-    isRecording=false;micBtn.classList.remove('recording');statusEl.textContent='Clique no microfone para continuar';statusEl.classList.remove('active');cancelAutoSend();
+
+function startRecording() {
+    recognition = initRecognition();
+    if (!recognition) return;
+    recognition.lang = langSelect.value;
+    finalTranscript = textArea.value;
+    try {
+        recognition.start();
+        isRecording = true;
+        micBtn.classList.add('recording');
+        statusEl.textContent = '🔴 Gravando... fale agora';
+        statusEl.classList.add('active');
+        statusEl.classList.remove('copied');
+    } catch(e) {
+        showError('Erro ao iniciar. Recarregue a página.');
+    }
 }
-function startAutoSendCountdown(){
-    cancelAutoSend();
-    const delaySec=parseInt(autoDelayInput.value)||3;
-    autoSendInfo.style.display='block';countdownEl.textContent=delaySec;timerBar.style.width='100%';
-    const startTime=Date.now(),totalMs=delaySec*1000;
-    countdownInterval=setInterval(()=>{
-        const remaining=Math.max(0,totalMs-(Date.now()-startTime));
-        countdownEl.textContent=Math.ceil(remaining/1000);
-        timerBar.style.width=(remaining/totalMs*100)+'%';
-        if(remaining<=0){cancelAutoSend();sendToClaude();}
-    },100);
+
+function stopRecording() {
+    if (recognition) { recognition.stop(); recognition = null; }
+    isRecording = false;
+    micBtn.classList.remove('recording');
+    statusEl.textContent = 'Clique no microfone para continuar';
+    statusEl.classList.remove('active');
+    cancelCountdown();
 }
-function cancelAutoSend(){if(countdownInterval){clearInterval(countdownInterval);countdownInterval=null;}autoSendInfo.style.display='none';timerBar.style.width='100%';}
-function sendToClaude(){
-    const text=textArea.value.trim();if(!text)return;cancelAutoSend();
-    navigator.clipboard.writeText(text).then(()=>{
-        sendBtn.textContent='✅ Copiado! Vá pro Claude → Cmd+V → Enter';sendBtn.classList.add('sent');
-        statusEl.textContent='📋 Copiado! Cole no Claude com Cmd+V e Enter';statusEl.classList.remove('active');
-        playBeep();
-        setTimeout(()=>{clearText();sendBtn.textContent='📤 Copiar Texto';sendBtn.classList.remove('sent');
-            if(isRecording){statusEl.textContent='🔴 Gravando... fale agora';statusEl.classList.add('active');}
-            else statusEl.textContent='Clique no microfone para continuar';
-        },4000);
-    });
+
+function startCountdown() {
+    cancelCountdown();
+    const delaySec = parseInt(autoDelayInput.value) || 3;
+    autoBar.style.display = 'block';
+    countdownEl.textContent = delaySec;
+    timerFill.style.width = '100%';
+
+    const startTime = Date.now();
+    const totalMs = delaySec * 1000;
+
+    countdownInterval = setInterval(() => {
+        const remaining = Math.max(0, totalMs - (Date.now() - startTime));
+        countdownEl.textContent = Math.ceil(remaining / 1000);
+        timerFill.style.width = (remaining / totalMs * 100) + '%';
+        if (remaining <= 0) {
+            cancelCountdown();
+            doCopy();
+        }
+    }, 100);
 }
-function playBeep(){try{const c=new(window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=800;g.gain.value=0.15;o.start();o.stop(c.currentTime+0.15);}catch(e){}}
-function clearText(){textArea.value='';finalTranscript='';}
-langSelect.addEventListener('change',()=>{if(isRecording){stopRecording();startRecording();}});
-document.addEventListener('keydown',(e)=>{if(e.target===textArea||e.target===autoDelayInput)return;if(e.code==='Space'){e.preventDefault();toggleRecording();}if(e.code==='Enter'){e.preventDefault();sendToClaude();}});
+
+function cancelCountdown() {
+    if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+    autoBar.style.display = 'none';
+    timerFill.style.width = '100%';
+}
+
+// Main copy function with multiple fallbacks
+async function doCopy() {
+    const text = textArea.value.trim();
+    if (!text) return;
+
+    let success = false;
+
+    // Method 1: Clipboard API
+    try {
+        await navigator.clipboard.writeText(text);
+        success = true;
+    } catch(e) {
+        console.log('Clipboard API failed, trying fallback...');
+    }
+
+    // Method 2: execCommand fallback
+    if (!success) {
+        try {
+            hiddenCopy.value = text;
+            hiddenCopy.style.position = 'fixed';
+            hiddenCopy.style.top = '0';
+            hiddenCopy.style.left = '0';
+            hiddenCopy.style.opacity = '0.01';
+            hiddenCopy.focus();
+            hiddenCopy.select();
+            success = document.execCommand('copy');
+            hiddenCopy.style.position = 'fixed';
+            hiddenCopy.style.top = '-9999px';
+            hiddenCopy.style.left = '-9999px';
+        } catch(e2) {
+            console.log('execCommand also failed');
+        }
+    }
+
+    // Method 3: Select the main textarea so user just needs Cmd+C
+    if (!success) {
+        textArea.focus();
+        textArea.select();
+        statusEl.textContent = '⚠️ Não copiou auto. Aperte Cmd+C pra copiar!';
+        statusEl.classList.remove('active');
+        statusEl.classList.add('copied');
+        return;
+    }
+
+    // Success!
+    playBeep();
+    document.body.classList.add('flash');
+    setTimeout(() => document.body.classList.remove('flash'), 600);
+
+    statusEl.textContent = '✅ COPIADO! Vá pro Claude → Cmd+V → Enter';
+    statusEl.classList.remove('active');
+    statusEl.classList.add('copied');
+
+    // Clear after a few seconds and keep recording
+    setTimeout(() => {
+        clearText();
+        if (isRecording) {
+            statusEl.textContent = '🔴 Gravando... fale agora';
+            statusEl.classList.add('active');
+            statusEl.classList.remove('copied');
+        } else {
+            statusEl.textContent = 'Clique no microfone para continuar';
+            statusEl.classList.remove('copied');
+        }
+    }, 5000);
+}
+
+function copyNow() { cancelCountdown(); doCopy(); }
+
+function playBeep() {
+    try {
+        const c = new (window.AudioContext || window.webkitAudioContext)();
+        const o = c.createOscillator();
+        const g = c.createGain();
+        o.connect(g); g.connect(c.destination);
+        o.frequency.value = 880; g.gain.value = 0.2;
+        o.start(); o.stop(c.currentTime + 0.2);
+        // Second beep
+        const o2 = c.createOscillator();
+        const g2 = c.createGain();
+        o2.connect(g2); g2.connect(c.destination);
+        o2.frequency.value = 1100; g2.gain.value = 0.2;
+        o2.start(c.currentTime + 0.25); o2.stop(c.currentTime + 0.4);
+    } catch(e) {}
+}
+
+function clearText() { textArea.value = ''; finalTranscript = ''; }
+
+langSelect.addEventListener('change', () => {
+    if (isRecording) { stopRecording(); startRecording(); }
+});
+
+document.addEventListener('keydown', (e) => {
+    if (e.target === textArea || e.target === autoDelayInput) return;
+    if (e.code === 'Space') { e.preventDefault(); toggleRecording(); }
+    if (e.code === 'Enter') { e.preventDefault(); copyNow(); }
+});
 </script>
 </body>
 </html>
