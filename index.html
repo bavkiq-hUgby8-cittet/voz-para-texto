@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎤 Voz → Claude</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 16px;
+        }
+        h1 { font-size: 24px; margin-bottom: 6px; color: #fff; }
+        .subtitle { color: #777; margin-bottom: 20px; font-size: 13px; text-align: center; line-height: 1.4; }
+        .mode-bar { display: flex; gap: 0; margin-bottom: 20px; border-radius: 8px; overflow: hidden; border: 1px solid #3a3a5a; }
+        .mode-btn { padding: 10px 20px; background: #2a2a4a; color: #888; border: none; cursor: pointer; font-size: 14px; transition: all 0.2s; }
+        .mode-btn.active { background: #4a6fa5; color: #fff; font-weight: 600; }
+        .mode-btn:hover:not(.active) { background: #3a3a5a; }
+        .mic-container { margin-bottom: 16px; }
+        .mic-btn { width: 90px; height: 90px; border-radius: 50%; border: 3px solid #4a4a6a; background: #2a2a4a; color: #fff; font-size: 36px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; }
+        .mic-btn:hover { background: #3a3a5a; border-color: #6a6a8a; }
+        .mic-btn.recording { background: #e74c3c; border-color: #c0392b; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(231,76,60,0.5); } 70% { box-shadow: 0 0 0 18px rgba(231,76,60,0); } 100% { box-shadow: 0 0 0 0 rgba(231,76,60,0); } }
+        .status { font-size: 13px; margin-bottom: 14px; color: #888; min-height: 18px; }
+        .status.active { color: #e74c3c; font-weight: 600; }
+        .text-area-container { width: 100%; max-width: 650px; }
+        .text-area { width: 100%; min-height: 160px; background: #16213e; border: 2px solid #2a2a4a; border-radius: 10px; color: #e0e0e0; font-size: 15px; line-height: 1.5; padding: 16px; resize: vertical; font-family: inherit; outline: none; transition: border-color 0.3s; }
+        .text-area:focus { border-color: #4a6fa5; }
+        .text-area::placeholder { color: #555; }
+        .buttons { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; justify-content: center; }
+        .btn { padding: 12px 22px; border-radius: 8px; border: none; font-size: 15px; cursor: pointer; transition: all 0.2s; font-weight: 500; }
+        .btn-send { background: #27ae60; color: #fff; flex: 1; min-width: 200px; font-size: 16px; }
+        .btn-send:hover { background: #2ecc71; }
+        .btn-send.sent { background: #4a6fa5; }
+        .btn-clear { background: #3a3a5a; color: #ccc; }
+        .btn-clear:hover { background: #4a4a6a; }
+        .settings-row { display: flex; gap: 16px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; justify-content: center; }
+        .setting-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #888; }
+        .setting-item input[type="number"] { width: 50px; background: #2a2a4a; border: 1px solid #4a4a6a; border-radius: 4px; color: #e0e0e0; padding: 4px 6px; font-size: 13px; text-align: center; outline: none; }
+        .lang-selector { display: flex; gap: 8px; align-items: center; }
+        .lang-selector label { color: #888; font-size: 13px; }
+        .lang-selector select { background: #2a2a4a; color: #e0e0e0; border: 1px solid #4a4a6a; border-radius: 6px; padding: 5px 10px; font-size: 13px; outline: none; }
+        .error-msg { background: #4a1a1a; border: 1px solid #e74c3c; border-radius: 8px; padding: 14px; margin-bottom: 16px; max-width: 650px; display: none; font-size: 13px; line-height: 1.4; }
+        .auto-send-info { background: #1a3a1a; border: 1px solid #27ae60; border-radius: 8px; padding: 14px; margin-top: 10px; margin-bottom: 10px; max-width: 650px; width: 100%; font-size: 13px; color: #7dcea0; display: none; }
+        .timer-bar { height: 4px; background: #27ae60; border-radius: 2px; margin-top: 10px; transition: width 0.1s linear; width: 100%; }
+        .instructions { margin-top: 20px; background: #16213e; border: 1px solid #2a2a4a; border-radius: 10px; padding: 18px; max-width: 650px; width: 100%; font-size: 13px; line-height: 1.6; color: #999; }
+        .instructions h3 { color: #ccc; font-size: 14px; margin-bottom: 10px; }
+        .instructions ol { padding-left: 20px; }
+        .instructions li { margin-bottom: 6px; }
+        .highlight { color: #4a6fa5; font-weight: 600; }
+        kbd { background: #2a2a4a; border: 1px solid #4a4a6a; border-radius: 4px; padding: 2px 6px; font-family: monospace; font-size: 12px; color: #ccc; }
+    </style>
+</head>
+<body>
+    <h1>🎤 Voz → Claude</h1>
+    <p class="subtitle">Fale, e quando parar o texto é copiado automaticamente.<br>Depois cole no Claude com Cmd+V e Enter.</p>
+    <div class="error-msg" id="errorMsg"></div>
+    <div class="mode-bar">
+        <button class="mode-btn active" id="modeAuto" onclick="setMode('auto')">⚡ Auto-envio</button>
+        <button class="mode-btn" id="modeManual" onclick="setMode('manual')">✋ Manual</button>
+    </div>
+    <div class="settings-row">
+        <div class="lang-selector">
+            <label>Idioma:</label>
+            <select id="langSelect">
+                <option value="pt-BR" selected>Português (BR)</option>
+                <option value="en-US">English</option>
+                <option value="es-ES">Español</option>
+            </select>
+        </div>
+        <div class="setting-item" id="delaySetting">
+            <label>Pausa pra enviar:</label>
+            <input type="number" id="autoDelay" value="3" min="1" max="15"> seg
+        </div>
+    </div>
+    <div class="mic-container">
+        <button class="mic-btn" id="micBtn" onclick="toggleRecording()">🎤</button>
+    </div>
+    <p class="status" id="status">Clique no microfone para começar</p>
+    <div class="auto-send-info" id="autoSendInfo">
+        ⏳ Copiando em <span id="countdown"></span>s... (fale mais para cancelar)
+        <div class="timer-bar" id="timerBar"></div>
+    </div>
+    <div class="text-area-container">
+        <textarea class="text-area" id="textArea" placeholder="O texto vai aparecer aqui conforme você fala..."></textarea>
+        <div class="buttons">
+            <button class="btn btn-send" id="sendBtn" onclick="sendToClaude()">📤 Copiar Texto</button>
+            <button class="btn btn-clear" onclick="clearText()">🗑️ Limpar</button>
+        </div>
+    </div>
+    <div class="instructions">
+        <h3>📋 Como funciona</h3>
+        <ol>
+            <li>Abra o <span class="highlight">Claude</span> em outra aba e clique no campo de texto</li>
+            <li>Volte aqui e clique no <span class="highlight">microfone</span></li>
+            <li>Fale normalmente</li>
+            <li>Quando parar de falar, o texto é <strong>copiado automaticamente</strong> e toca um bip</li>
+            <li>Vá pro Claude e aperte <kbd>Cmd</kbd>+<kbd>V</kbd> e depois <kbd>Enter</kbd></li>
+        </ol>
+    </div>
+<script>
+let recognition=null,isRecording=false,finalTranscript='',mode='auto',countdownInterval=null;
+const micBtn=document.getElementById('micBtn'),statusEl=document.getElementById('status'),textArea=document.getElementById('textArea'),sendBtn=document.getElementById('sendBtn'),errorMsg=document.getElementById('errorMsg'),langSelect=document.getElementById('langSelect'),autoSendInfo=document.getElementById('autoSendInfo'),countdownEl=document.getElementById('countdown'),timerBar=document.getElementById('timerBar'),autoDelayInput=document.getElementById('autoDelay');
+
+function showError(m){errorMsg.textContent=m;errorMsg.style.display='block';}
+function hideError(){errorMsg.style.display='none';}
+function setMode(m){mode=m;document.getElementById('modeAuto').classList.toggle('active',m==='auto');document.getElementById('modeManual').classList.toggle('active',m==='manual');document.getElementById('delaySetting').style.display=m==='auto'?'flex':'none';cancelAutoSend();}
+function initRecognition(){
+    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!SR){showError('Seu navegador não suporta. Use o Google Chrome.');micBtn.disabled=true;return null;}
+    const rec=new SR();rec.continuous=true;rec.interimResults=true;rec.lang=langSelect.value;
+    rec.onresult=(event)=>{
+        let interim='';
+        for(let i=event.resultIndex;i<event.results.length;i++){
+            const t=event.results[i][0].transcript;
+            if(event.results[i].isFinal){finalTranscript+=t+' ';if(mode==='auto'&&isRecording)startAutoSendCountdown();}
+            else{interim+=t;cancelAutoSend();}
+        }
+        textArea.value=finalTranscript+(interim||'');
+        textArea.scrollTop=textArea.scrollHeight;
+    };
+    rec.onerror=(event)=>{if(event.error==='not-allowed'){showError('Microfone negado. Clique no cadeado na barra do navegador e permita.');stopRecording();}};
+    rec.onend=()=>{if(isRecording)try{rec.start();}catch(e){}};
+    return rec;
+}
+function toggleRecording(){hideError();isRecording?stopRecording():startRecording();}
+function startRecording(){
+    recognition=initRecognition();if(!recognition)return;
+    recognition.lang=langSelect.value;finalTranscript=textArea.value;
+    try{recognition.start();isRecording=true;micBtn.classList.add('recording');statusEl.textContent='🔴 Gravando... fale agora';statusEl.classList.add('active');}
+    catch(e){showError('Erro ao iniciar. Recarregue a página.');}
+}
+function stopRecording(){
+    if(recognition){recognition.stop();recognition=null;}
+    isRecording=false;micBtn.classList.remove('recording');statusEl.textContent='Clique no microfone para continuar';statusEl.classList.remove('active');cancelAutoSend();
+}
+function startAutoSendCountdown(){
+    cancelAutoSend();
+    const delaySec=parseInt(autoDelayInput.value)||3;
+    autoSendInfo.style.display='block';countdownEl.textContent=delaySec;timerBar.style.width='100%';
+    const startTime=Date.now(),totalMs=delaySec*1000;
+    countdownInterval=setInterval(()=>{
+        const remaining=Math.max(0,totalMs-(Date.now()-startTime));
+        countdownEl.textContent=Math.ceil(remaining/1000);
+        timerBar.style.width=(remaining/totalMs*100)+'%';
+        if(remaining<=0){cancelAutoSend();sendToClaude();}
+    },100);
+}
+function cancelAutoSend(){if(countdownInterval){clearInterval(countdownInterval);countdownInterval=null;}autoSendInfo.style.display='none';timerBar.style.width='100%';}
+function sendToClaude(){
+    const text=textArea.value.trim();if(!text)return;cancelAutoSend();
+    navigator.clipboard.writeText(text).then(()=>{
+        sendBtn.textContent='✅ Copiado! Vá pro Claude → Cmd+V → Enter';sendBtn.classList.add('sent');
+        statusEl.textContent='📋 Copiado! Cole no Claude com Cmd+V e Enter';statusEl.classList.remove('active');
+        playBeep();
+        setTimeout(()=>{clearText();sendBtn.textContent='📤 Copiar Texto';sendBtn.classList.remove('sent');
+            if(isRecording){statusEl.textContent='🔴 Gravando... fale agora';statusEl.classList.add('active');}
+            else statusEl.textContent='Clique no microfone para continuar';
+        },4000);
+    });
+}
+function playBeep(){try{const c=new(window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=800;g.gain.value=0.15;o.start();o.stop(c.currentTime+0.15);}catch(e){}}
+function clearText(){textArea.value='';finalTranscript='';}
+langSelect.addEventListener('change',()=>{if(isRecording){stopRecording();startRecording();}});
+document.addEventListener('keydown',(e)=>{if(e.target===textArea||e.target===autoDelayInput)return;if(e.code==='Space'){e.preventDefault();toggleRecording();}if(e.code==='Enter'){e.preventDefault();sendToClaude();}});
+</script>
+</body>
+</html>
